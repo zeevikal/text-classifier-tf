@@ -2,6 +2,7 @@ import os
 from tqdm import tqdm
 
 DATA_DIR = "data"
+MAX_DOCS = 500
 
 
 def file_len(fname):
@@ -12,23 +13,34 @@ def file_len(fname):
 
 
 def csv_data_to_text(data_dirs):
-    with open(r'{}/pos.txt'.format(DATA_DIR), 'w') as cs_outfile:
-        with open(r'{}/neg.txt'.format(DATA_DIR), 'w') as other_outfile:
-            for data_dir in data_dirs:
-                for txt_file in tqdm(os.listdir(data_dir)):
-                    if data_dir.__contains__('CS'):
-                        if txt_file.endswith(".txt"):
-                            with open(txt_file) as infile:
-                                for line in infile:
-                                    cs_outfile.write(line)
-                    else:
-                        if txt_file.endswith(".txt"):
-                            with open(txt_file) as infile:
-                                for line in infile:
-                                    other_outfile.write(line)
-
-    print('pos len: ', file_len(r'{}/pos.txt'.format(DATA_DIR)))
-    print('neg len: ', file_len(r'{}/neg.txt'.format(DATA_DIR)))
+    pos_cnt = 0
+    neg_cnt = 0
+    with open(r'pos.txt', 'w') as cs_outfile:
+        with open(r'neg.txt', 'w') as other_outfile:
+            for root, dirs, files in os.walk(data_dirs):
+                for dir in dirs:
+                    for txt_file in tqdm(os.listdir('{}/{}'.format(root, dir))):
+                        if dir.__contains__('CS'):
+                            if txt_file.endswith(".txt") and pos_cnt <= MAX_DOCS:
+                                with open('{}/{}/{}'.format(root, dir, txt_file)) as infile:
+                                    pos_cnt += 1
+                                    try:
+                                        for line in infile:
+                                            cs_outfile.write(str(line) + '\n')
+                                    except:
+                                        continue
+                        else:
+                            if txt_file.endswith(".txt") and neg_cnt <= MAX_DOCS:
+                                with open('{}/{}/{}'.format(root, dir, txt_file)) as infile:
+                                    neg_cnt += 1
+                                    try:
+                                        for line in infile:
+                                            other_outfile.write(str(line) + '\n')
+                                    except:
+                                        continue
+    #
+    # print('pos len: ', file_len(r'pos.txt'))
+    # print('neg len: ', file_len(r'neg.txt'))
 
 
 if __name__ == '__main__':

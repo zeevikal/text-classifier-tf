@@ -8,8 +8,8 @@ from classifier_cnn import CNNClassifier
 
 dev_sample_percentage = .1
 
-positive_data_file = "./data/pos.txt"
-negative_data_file = "./data/neg.txt"
+positive_data_file = "pos.txt"
+negative_data_file = "neg.txt"
 
 embedding_dim = 128
 filter_sizes = "3,5,8"
