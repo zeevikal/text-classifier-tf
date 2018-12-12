@@ -2,7 +2,7 @@ import os
 from tqdm import tqdm
 
 DATA_DIR = "data"
-MAX_DOCS = 500
+MAX_DOCS = 100000
 
 
 def file_len(fname):
